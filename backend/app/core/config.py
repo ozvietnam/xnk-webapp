@@ -1,4 +1,5 @@
 from pydantic_settings import BaseSettings
+from pydantic import field_validator
 from typing import List
 
 
@@ -15,6 +16,7 @@ class Settings(BaseSettings):
     # App
     PORT: int = 8000
     ENVIRONMENT: str = "development"
+    # Accept comma-separated string or JSON list from env
     ALLOWED_ORIGINS: List[str] = ["http://localhost:3000"]
 
     # Redis (T14)
@@ -22,6 +24,13 @@ class Settings(BaseSettings):
 
     # Database direct URL (optional, used by migration scripts)
     DATABASE_URL: str = ""
+
+    @field_validator("ALLOWED_ORIGINS", mode="before")
+    @classmethod
+    def parse_allowed_origins(cls, v):
+        if isinstance(v, str):
+            return [origin.strip() for origin in v.split(",") if origin.strip()]
+        return v
 
     class Config:
         env_file = ".env"

@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: xnk-webapp-api
+    runtime: docker
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
+    plan: free
+    healthCheckPath: /health
+    envVars:
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_KEY
+        sync: false
+      - key: SUPABASE_SERVICE_KEY
+        sync: false
+      - key: ENVIRONMENT
+        value: production
+      - key: ALLOWED_ORIGINS
+        value: https://xnk-webapp.vercel.app,http://localhost:3000
+      - key: OLLAMA_BASE_URL
+        value: http://localhost:11434
