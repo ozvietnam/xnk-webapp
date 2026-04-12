@@ -244,5 +244,36 @@ Testing results: component structure verified, task.json T13 passes: true
 
 ---
 
-Next task: T05 (chatbot) — BLOCKED on CLAUDE_API_KEY
-Remaining: T14 (Redis/Docker), T15 (Docs) — both blocked on upstream tasks
+---
+
+Task ID: T05
+Date: 2026-04-12
+Status: COMPLETED
+What was done:
+  - Implemented backend/app/services/chatbot.py
+    * ask(): search HS top 5 (threshold=0.10) → build context → call Ollama → record history
+    * _call_ollama(): httpx async POST to /v1/chat/completions (OpenAI-compatible)
+    * _build_context(): formats HS results with code/description/tax rates
+    * System prompt: chuyên gia HS code XNK VN-TQ, tiếng Việt
+    * Timeout: 120s; graceful error fallback messages in Vietnamese
+  - Updated backend/app/core/config.py
+    * Removed CLAUDE_API_KEY, added OLLAMA_BASE_URL + OLLAMA_MODEL
+    * Added DATABASE_URL field + extra="ignore" for .env compatibility
+  - Updated backend/.env.example to use OLLAMA settings
+  - Created backend/scripts/test_t05_chatbot.py (integration test)
+Testing results:
+  - Test 1 'điện thoại': ✓ Answer 147 chars, citations=['8517.12.00', ...]
+  - Test 2 'thép cuộn': ✓ Answer 825 chars, citations=['7208.51.00', ...]
+  - Test 3 'thủ tục hải quan': ✓ Answer 1632 chars
+  - pytest tests/: 1 passed ✓
+  - task.json T05 passes: true
+Notes for future agents:
+  - Ollama must be running: http://localhost:11434 with model qwen2.5-coder:32b
+  - OpenAI-compatible endpoint: /v1/chat/completions (not /api/generate)
+  - history record_search uses get_service_client() (bypasses RLS for insert)
+  - Timeout 120s — qwen2.5-coder:32b can be slow on first response
+
+---
+
+Next task: T08 (Frontend Chatbot UI)
+Remaining: T14 (Redis/Docker), T15 (Docs)

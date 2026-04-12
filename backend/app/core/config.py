@@ -8,8 +8,9 @@ class Settings(BaseSettings):
     SUPABASE_KEY: str = ""
     SUPABASE_SERVICE_KEY: str = ""
 
-    # Claude API
-    CLAUDE_API_KEY: str = ""
+    # Ollama (local LLM)
+    OLLAMA_BASE_URL: str = "http://localhost:11434"
+    OLLAMA_MODEL: str = "qwen2.5-coder:32b"
 
     # App
     PORT: int = 8000
@@ -19,9 +20,13 @@ class Settings(BaseSettings):
     # Redis (T14)
     REDIS_URL: str = "redis://localhost:6379"
 
+    # Database direct URL (optional, used by migration scripts)
+    DATABASE_URL: str = ""
+
     class Config:
         env_file = ".env"
         case_sensitive = True
+        extra = "ignore"
 
 
 settings = Settings()
