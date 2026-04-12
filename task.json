@@ -15,7 +15,7 @@
       "id": "T02",
       "title": "Supabase Schema",
       "description": "Tạo migration cho hs_codes, hs_chapters, hs_sections, search_history, pg_trgm extension, GIN index",
-      "passes": false,
+      "passes": true,
       "dependencies": ["T01"],
       "needs_external": ["SUPABASE_URL", "SUPABASE_KEY"],
       "notes": "Cần Supabase credentials"
