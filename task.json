@@ -1,0 +1,128 @@
+{
+  "project": "xnk-webapp",
+  "description": "XNK Webapp - Tra cứu HS Code & Chatbot AI cho Xuất Nhập Khẩu VN-TQ",
+  "tasks": [
+    {
+      "id": "T01",
+      "title": "Project Scaffold",
+      "description": "Tạo cấu trúc project: backend/ frontend/ supabase/migrations/ docs/, FastAPI skeleton, Next.js 14, docker-compose, init.sh",
+      "passes": false,
+      "dependencies": [],
+      "needs_external": false,
+      "notes": "Không cần Supabase hay Claude API"
+    },
+    {
+      "id": "T02",
+      "title": "Supabase Schema",
+      "description": "Tạo migration cho hs_codes, hs_chapters, hs_sections, search_history, pg_trgm extension, GIN index",
+      "passes": false,
+      "dependencies": ["T01"],
+      "needs_external": ["SUPABASE_URL", "SUPABASE_KEY"],
+      "notes": "Cần Supabase credentials"
+    },
+    {
+      "id": "T03",
+      "title": "Seed Data — 50 mã HS XNK phổ biến VN-TQ",
+      "description": "Seed 50 mã HS codes phổ biến trong thương mại Việt Nam - Trung Quốc",
+      "passes": false,
+      "dependencies": ["T02"],
+      "needs_external": ["SUPABASE_URL", "SUPABASE_KEY"]
+    },
+    {
+      "id": "T04",
+      "title": "Backend HS Search API",
+      "description": "GET /api/hs-codes/search với pg_trgm similarity + ILIKE fallback, GET /api/hs-codes/{code}",
+      "passes": false,
+      "dependencies": ["T02", "T03"],
+      "needs_external": ["SUPABASE_URL", "SUPABASE_KEY"]
+    },
+    {
+      "id": "T05",
+      "title": "Chatbot AI (Claude + RAG)",
+      "description": "POST /api/chatbot/ask: nhận câu hỏi → search HS top 5 → context → Claude trả lời → lưu search_history",
+      "passes": false,
+      "dependencies": ["T04"],
+      "needs_external": ["CLAUDE_API_KEY", "SUPABASE_URL", "SUPABASE_KEY"]
+    },
+    {
+      "id": "T06",
+      "title": "Regulations API",
+      "description": "GET /api/regulations với filter category, GET /api/regulations/{id}",
+      "passes": false,
+      "dependencies": ["T02"],
+      "needs_external": ["SUPABASE_URL", "SUPABASE_KEY"]
+    },
+    {
+      "id": "T07",
+      "title": "Frontend: Tra cứu HS page",
+      "description": "Next.js page /tra-cuu-hs: search bar, results list, detail modal. Public.",
+      "passes": false,
+      "dependencies": ["T04"],
+      "needs_external": ["NEXT_PUBLIC_SUPABASE_URL", "NEXT_PUBLIC_API_URL"]
+    },
+    {
+      "id": "T08",
+      "title": "Frontend: Chatbot UI",
+      "description": "Next.js page /chatbot: chat interface, login required",
+      "passes": false,
+      "dependencies": ["T05", "T07"],
+      "needs_external": ["NEXT_PUBLIC_SUPABASE_URL", "NEXT_PUBLIC_API_URL"]
+    },
+    {
+      "id": "T09",
+      "title": "Frontend: Quy định page",
+      "description": "Next.js page /quy-dinh: danh sách quy định, filter, search",
+      "passes": false,
+      "dependencies": ["T06"],
+      "needs_external": ["NEXT_PUBLIC_API_URL"]
+    },
+    {
+      "id": "T10",
+      "title": "Landing page + Navbar + Footer",
+      "description": "/ root page, shared Navbar, Footer components",
+      "passes": false,
+      "dependencies": ["T07", "T08", "T09"],
+      "needs_external": []
+    },
+    {
+      "id": "T11",
+      "title": "Supabase Auth",
+      "description": "Login/logout với Supabase Auth, middleware bảo vệ /chatbot và /dashboard",
+      "passes": false,
+      "dependencies": ["T10"],
+      "needs_external": ["SUPABASE_URL", "SUPABASE_KEY", "NEXT_PUBLIC_SUPABASE_URL", "NEXT_PUBLIC_SUPABASE_ANON_KEY"]
+    },
+    {
+      "id": "T12",
+      "title": "History & Stats API (RLS)",
+      "description": "GET /api/history, GET /api/stats với Row Level Security",
+      "passes": false,
+      "dependencies": ["T05", "T11"],
+      "needs_external": ["SUPABASE_URL", "SUPABASE_SERVICE_KEY"]
+    },
+    {
+      "id": "T13",
+      "title": "Dashboard frontend",
+      "description": "Next.js page /dashboard: user history, stats charts. Login required.",
+      "passes": false,
+      "dependencies": ["T12"],
+      "needs_external": ["NEXT_PUBLIC_SUPABASE_URL", "NEXT_PUBLIC_API_URL"]
+    },
+    {
+      "id": "T14",
+      "title": "Performance: Redis cache + rate limit + Docker",
+      "description": "Redis cache cho search results, rate limiting cho chatbot, Docker Compose production config",
+      "passes": false,
+      "dependencies": ["T13"],
+      "needs_external": []
+    },
+    {
+      "id": "T15",
+      "title": "Documentation",
+      "description": "README.md, API docs (OpenAPI), deployment guide, env setup guide",
+      "passes": false,
+      "dependencies": ["T14"],
+      "needs_external": []
+    }
+  ]
+}

@@ -1,0 +1,34 @@
+XNK Webapp — Progress Log
+=========================
+
+[2026-04-12] T01 — Project Scaffold
+  Status: COMPLETED
+  Files created:
+    - backend/app/main.py (FastAPI skeleton)
+    - backend/app/core/ (config, database, deps)
+    - backend/app/routers/ (hs_codes, chatbot, regulations, history, stats)
+    - backend/app/services/ (stubs — implemented T04+)
+    - backend/app/repositories/ (stubs)
+    - backend/app/models/schemas.py (Pydantic models)
+    - backend/tests/test_health.py
+    - backend/requirements.txt
+    - backend/.env.example
+    - backend/Dockerfile
+    - frontend/app/ (all pages: /, /tra-cuu-hs, /chatbot, /quy-dinh, /dashboard, /dang-nhap)
+    - frontend/components/ (Navbar, Footer)
+    - frontend/lib/ (api.ts, supabase.ts)
+    - frontend/types/index.ts
+    - frontend/middleware.ts (auth protection)
+    - frontend/package.json, tsconfig.json, tailwind.config.ts
+    - frontend/Dockerfile
+    - supabase/migrations/README.md
+    - docker-compose.yml
+    - init.sh
+    - .gitignore
+  Commit: [T01] Project scaffold - completed
+
+[2026-04-12] T02 — Supabase Schema
+  Status: BLOCKED — cần Supabase credentials (SUPABASE_URL, SUPABASE_KEY)
+  Action: Anh Thang cung cấp .env credentials để tiếp tục T02
+
+Next: T02 (Supabase schema migration) — BLOCKED on credentials
