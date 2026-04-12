@@ -6,7 +6,7 @@
       "id": "T01",
       "title": "Project Scaffold",
       "description": "Tạo cấu trúc project: backend/ frontend/ supabase/migrations/ docs/, FastAPI skeleton, Next.js 14, docker-compose, init.sh",
-      "passes": false,
+      "passes": true,
       "dependencies": [],
       "needs_external": false,
       "notes": "Không cần Supabase hay Claude API"

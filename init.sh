@@ -11,10 +11,12 @@ echo "✓ Dependencies OK"
 
 # Step 2: Check backend env
 if [ ! -f backend/.env ]; then
-  echo "ERROR: backend/.env not found. Copy backend/.env.example and fill values."
-  exit 1
+  echo "WARNING: backend/.env not found. Copy backend/.env.example and fill values."
+  echo "         Servers will start but Supabase/Claude features will NOT work."
+  echo "         T02+ are BLOCKED until .env is configured."
+else
+  echo "✓ backend/.env found"
 fi
-echo "✓ backend/.env found"
 
 # Step 3: Backend
 echo "→ Starting backend..."

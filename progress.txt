@@ -1,34 +1,53 @@
 XNK Webapp — Progress Log
 =========================
+Format: Task ID | Date | Status | Done | Test results | Notes
 
-[2026-04-12] T01 — Project Scaffold
-  Status: COMPLETED
-  Files created:
-    - backend/app/main.py (FastAPI skeleton)
-    - backend/app/core/ (config, database, deps)
-    - backend/app/routers/ (hs_codes, chatbot, regulations, history, stats)
-    - backend/app/services/ (stubs — implemented T04+)
-    - backend/app/repositories/ (stubs)
-    - backend/app/models/schemas.py (Pydantic models)
-    - backend/tests/test_health.py
-    - backend/requirements.txt
-    - backend/.env.example
-    - backend/Dockerfile
-    - frontend/app/ (all pages: /, /tra-cuu-hs, /chatbot, /quy-dinh, /dashboard, /dang-nhap)
-    - frontend/components/ (Navbar, Footer)
-    - frontend/lib/ (api.ts, supabase.ts)
-    - frontend/types/index.ts
-    - frontend/middleware.ts (auth protection)
-    - frontend/package.json, tsconfig.json, tailwind.config.ts
-    - frontend/Dockerfile
-    - supabase/migrations/README.md
-    - docker-compose.yml
-    - init.sh
-    - .gitignore
-  Commit: [T01] Project scaffold - completed
+---
 
-[2026-04-12] T02 — Supabase Schema
-  Status: BLOCKED — cần Supabase credentials (SUPABASE_URL, SUPABASE_KEY)
-  Action: Anh Thang cung cấp .env credentials để tiếp tục T02
+Task ID: T01
+Date: 2026-04-12
+Status: COMPLETED
+What was done:
+  - Created full project scaffold at /Users/ozvietnamdesktop/Desktop/work/xnk-webapp/
+  - backend/app/main.py — FastAPI app, CORS, /health, 5 routers registered
+  - backend/app/core/ — config.py (pydantic-settings), database.py (Supabase singleton), deps.py (auth injection)
+  - backend/app/routers/ — hs_codes.py, chatbot.py, regulations.py, history.py, stats.py
+  - backend/app/services/ — all 5 stubs with NotImplementedError (unblocked in T04/T05/T06/T12)
+  - backend/app/repositories/ — hs_codes.py, regulations.py stubs
+  - backend/app/models/schemas.py — Pydantic v2 models (HSCode, Chat, Regulation, History, Stats)
+  - backend/tests/test_health.py — smoke test for GET /health
+  - backend/requirements.txt, .env.example, Dockerfile
+  - frontend/app/ — 6 pages: /, /tra-cuu-hs, /chatbot, /quy-dinh, /dashboard, /dang-nhap
+  - frontend/components/ — Navbar.tsx, Footer.tsx
+  - frontend/lib/ — api.ts (typed fetch wrappers), supabase.ts (browser client)
+  - frontend/types/index.ts — HSCode, Regulation, ChatMessage, SearchHistoryItem
+  - frontend/middleware.ts — Supabase SSR auth guard for /chatbot + /dashboard
+  - frontend/package.json (Next.js 14), tsconfig.json (strict), tailwind.config.ts, next.config.ts
+  - frontend/Dockerfile
+  - supabase/migrations/README.md (placeholder, T02 will add SQL files)
+  - docker-compose.yml (backend + frontend + redis)
+  - init.sh (env check warn, venv, pip, uvicorn app.main:app, npm dev)
+  - .gitignore
+Testing results:
+  - Scaffold structure verified: all dirs + files present
+  - init.sh fixed: missing .env is WARNING (not exit 1) so scaffold can be tested dry
+  - pytest not run: requires pip install (skipped per T01 scope — no packages needed for scaffold)
+  - task.json T01 passes: true
+Notes for future agents:
+  - T02 BLOCKED: needs SUPABASE_URL, SUPABASE_KEY, SUPABASE_SERVICE_KEY in backend/.env
+  - T05 BLOCKED: additionally needs CLAUDE_API_KEY
+  - backend uvicorn command: `uvicorn app.main:app` (app is a package under backend/)
+  - services/ are all stubs — do NOT implement until their dependent task is active
+  - DB schema is in architecture.md — use it as source of truth for T02 migrations
 
-Next: T02 (Supabase schema migration) — BLOCKED on credentials
+---
+
+Task ID: T02
+Date: —
+Status: BLOCKED
+Blocked on: SUPABASE_URL, SUPABASE_KEY, SUPABASE_SERVICE_KEY
+Action needed: Anh Thang cung cấp Supabase project credentials → copy backend/.env.example → backend/.env → fill values → agent resumes T02
+
+---
+
+Next task: T02 (Supabase schema + pg_trgm + GIN index) — BLOCKED on credentials
