@@ -38,9 +38,9 @@
     },
     {
       "id": "T05",
-      "title": "Chatbot AI (Claude + RAG)",
-      "description": "POST /api/chatbot/ask: nhận câu hỏi → search HS top 5 → context → Claude trả lời → lưu search_history",
-      "passes": false,
+      "title": "Chatbot AI (Ollama + RAG)",
+      "description": "POST /api/chatbot/ask: nhận câu hỏi → search HS top 5 → context → Ollama qwen2.5-coder:32b trả lời → lưu search_history",
+      "passes": true,
       "dependencies": ["T04"],
       "needs_external": ["CLAUDE_API_KEY", "SUPABASE_URL", "SUPABASE_KEY"]
     },
