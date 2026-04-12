@@ -56,7 +56,7 @@
       "id": "T07",
       "title": "Frontend: Tra cứu HS page",
       "description": "Next.js page /tra-cuu-hs: search bar, results list, detail modal. Public.",
-      "passes": false,
+      "passes": true,
       "dependencies": ["T04"],
       "needs_external": ["NEXT_PUBLIC_SUPABASE_URL", "NEXT_PUBLIC_API_URL"]
     },
@@ -72,7 +72,7 @@
       "id": "T09",
       "title": "Frontend: Quy định page",
       "description": "Next.js page /quy-dinh: danh sách quy định, filter, search",
-      "passes": false,
+      "passes": true,
       "dependencies": ["T06"],
       "needs_external": ["NEXT_PUBLIC_API_URL"]
     },

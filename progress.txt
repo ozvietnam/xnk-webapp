@@ -150,4 +150,42 @@ Notes for future agents:
 
 ---
 
-Next task: T07 — Frontend tra-cuu-hs page (depends T04 ✓)
+Task ID: T07
+Date: 2026-04-12
+Status: COMPLETED
+What was done:
+  - Rewrote frontend/app/tra-cuu-hs/page.tsx
+    * TypeScript HSCodeResult interface (typed, not any[])
+    * Search form with loading spinner, disabled state
+    * Results table: code, description_vi/en, MFN%, ACFTA%, unit, similarity badge (color-coded)
+    * DetailModal component: click row → full detail overlay (taxes, notes, EN description)
+    * Error state, empty state, result count
+  - Added globals.css btn-primary/secondary/outline utility classes
+Testing results:
+  - Component structure verified (TypeScript strict, no 'any' in main flow)
+  - Connects to NEXT_PUBLIC_API_URL/api/hs-codes/search ✓
+  - Detail modal closes on backdrop click or × ✓
+  - task.json T07 passes: true
+
+---
+
+Task ID: T09
+Date: 2026-04-12
+Status: COMPLETED
+What was done:
+  - Rewrote frontend/app/quy-dinh/page.tsx
+    * TypeScript Regulation interface
+    * Category filter tabs (Tất cả / Thủ tục / Chứng từ / Thuế / Kiểm tra)
+    * Accordion expand/collapse for content_vi
+    * Color-coded category badges
+    * Loading spinner, error state, empty state
+Testing results:
+  - Component structure verified
+  - Category filter changes API call URL ✓
+  - Accordion toggle by id ✓
+  - task.json T09 passes: true
+
+---
+
+Next task: T10 (landing page already done), T11 Supabase Auth (needs NEXT_PUBLIC_SUPABASE_ANON_KEY configured in frontend/.env.local)
+Blocked: T05, T08 — need CLAUDE_API_KEY
