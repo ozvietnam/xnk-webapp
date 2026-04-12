@@ -275,5 +275,31 @@ Notes for future agents:
 
 ---
 
-Next task: T08 (Frontend Chatbot UI)
-Remaining: T14 (Redis/Docker), T15 (Docs)
+---
+
+Task ID: T08
+Date: 2026-04-12
+Status: COMPLETED
+What was done:
+  - Rewrote frontend/app/chatbot/page.tsx
+    * useEffect: get Supabase session → pass Bearer token in API requests
+    * generateSessionId(): per-session conversation ID (random + timestamp)
+    * Suggested questions (4 chips) shown on empty state
+    * Animated typing indicator (3 bouncing dots) while loading
+    * Citations rendered as inline code chips below assistant messages
+    * Timestamps per message (vi-VN locale)
+    * Textarea input (Enter = send, Shift+Enter = newline)
+    * "Xóa hội thoại" button clears messages
+    * Auto-scroll to bottom on new messages (useRef + scrollIntoView)
+  - Fixed frontend/middleware.ts: typed 'cookies' param (TypeScript strict)
+  - Replaced next.config.ts with next.config.mjs (Next.js 14 compatibility)
+  - Created frontend/.eslintrc.json (next/core-web-vitals)
+Testing results:
+  - npm run lint: ✓ no warnings or errors
+  - npm run build: ✓ /chatbot 2.8 kB, all 9 pages generated
+  - task.json T08 passes: true
+
+---
+
+Next task: T14 (Redis cache + rate limit + Docker)
+Remaining: T15 (Docs)
