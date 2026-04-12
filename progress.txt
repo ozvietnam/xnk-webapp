@@ -229,5 +229,20 @@ Testing results:
 
 ---
 
-Next task: T13 — Dashboard frontend
-Blocked: T05, T08 — need CLAUDE_API_KEY to implement chatbot
+Task ID: T13
+Date: 2026-04-12
+Status: COMPLETED
+What was done:
+  - Rewrote frontend/app/dashboard/page.tsx
+    * StatCard components: total hs_codes, total searches, total regulations
+    * Popular queries (chips with count)
+    * User search history table (query, result codes truncated, timestamp)
+    * Logout button via supabase.auth.signOut()
+    * Fetches /api/stats (public) + /api/history (with Bearer token from session)
+    * Loading skeleton animations, empty state for history
+Testing results: component structure verified, task.json T13 passes: true
+
+---
+
+Next task: T05 (chatbot) — BLOCKED on CLAUDE_API_KEY
+Remaining: T14 (Redis/Docker), T15 (Docs) — both blocked on upstream tasks

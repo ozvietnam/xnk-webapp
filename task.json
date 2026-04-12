@@ -104,7 +104,7 @@
       "id": "T13",
       "title": "Dashboard frontend",
       "description": "Next.js page /dashboard: user history, stats charts. Login required.",
-      "passes": false,
+      "passes": true,
       "dependencies": ["T12"],
       "needs_external": ["NEXT_PUBLIC_SUPABASE_URL", "NEXT_PUBLIC_API_URL"]
     },
