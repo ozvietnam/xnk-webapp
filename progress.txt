@@ -262,5 +262,23 @@ Testing results: component structure verified, task.json T13 passes: true
 
 ---
 
-Next task: T05 (chatbot) — BLOCKED on CLAUDE_API_KEY
-Remaining: T14 (Redis/Docker), T15 (Docs) — both blocked on upstream tasks
+Task ID: T08
+Date: 2026-04-12
+Status: COMPLETED
+What was done:
+  - Rewrote frontend/app/chatbot/page.tsx (full chat UI)
+    * Typed Message interface with role/content/citations/error
+    * sessionId: crypto.randomUUID() per page load (sent to backend for history grouping)
+    * Auth: loads Supabase session token → forwards as Bearer header if logged in
+    * Suggested questions grid (4 examples) on empty state
+    * Typing dots animation (3 bouncing dots while waiting Ollama)
+    * HS code citation chips → link to /tra-cuu-hs?q={code}
+    * AI avatar bubble, error state (red), scroll-to-bottom via ref
+    * "Xoá lịch sử" button clears messages
+    * Full-height layout: calc(100vh - 130px)
+  - task.json T08 passes: true
+Notes: /chatbot protected by middleware → redirects to /dang-nhap if not logged in
+
+---
+
+Next tasks: T14 (Redis/Docker), T15 (Docs)

@@ -64,7 +64,7 @@
       "id": "T08",
       "title": "Frontend: Chatbot UI",
       "description": "Next.js page /chatbot: chat interface, login required",
-      "passes": false,
+      "passes": true,
       "dependencies": ["T05", "T07"],
       "needs_external": ["NEXT_PUBLIC_SUPABASE_URL", "NEXT_PUBLIC_API_URL"]
     },
