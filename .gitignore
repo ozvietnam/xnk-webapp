@@ -36,3 +36,6 @@ logs/
 
 # Aider
 .aider*
+
+backend/venv/
+.claude/worktrees/

@@ -10,9 +10,9 @@
     │
     │ HTTP / REST
     ▼
-[FastAPI :8000]
+[FastAPI :8000]  ◄──► [Redis :6379]       (cache + rate limit)
     ├──► [Supabase PostgreSQL]  (hs_codes, regulations, history)
-    └──► [Claude API]           (claude-sonnet-4-20250514)
+    └──► [Ollama :11434]        (qwen2.5-coder:32b, local)
 ```
 
 ## Component Responsibilities
@@ -20,9 +20,10 @@
 | Component | Port | Responsibility |
 |-----------|------|---------------|
 | Next.js | 3000 | UI, SSR, auth middleware, API calls |
-| FastAPI | 8000 | Business logic, DB queries, Claude integration |
+| FastAPI | 8000 | Business logic, DB queries, Ollama integration |
 | Supabase | cloud | PostgreSQL + Auth + RLS |
-| Claude API | cloud | AI chatbot responses |
+| Ollama | 11434 | AI chatbot responses (qwen2.5-coder:32b, local) |
+| Redis | 6379 | Cache search results, rate limit sliding window |
 
 ## Data Flow — HS Code Search
 
@@ -67,9 +68,9 @@ System: "Bạn là chuyên gia XNK Việt Nam..."
 Context: [top 5 HS codes + regulations]
 User: question
     │
-    ▼ Step 3: Claude API
-claude-sonnet-4-20250514
-max_tokens: 1024
+    ▼ Step 3: Ollama API (local)
+qwen2.5-coder:32b via /v1/chat/completions
+max_tokens: 1024, temperature: 0.3
     │
     ▼ Step 4: Log & Return
 Save to search_history
