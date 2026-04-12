@@ -48,7 +48,7 @@
       "id": "T06",
       "title": "Regulations API",
       "description": "GET /api/regulations với filter category, GET /api/regulations/{id}",
-      "passes": false,
+      "passes": true,
       "dependencies": ["T02"],
       "needs_external": ["SUPABASE_URL", "SUPABASE_KEY"]
     },

@@ -18,7 +18,7 @@ async def list_regulations(
 
 
 @router.get("/{regulation_id}", response_model=RegulationResponse)
-async def get_regulation(regulation_id: int, db: Client = Depends(get_db)):
+async def get_regulation(regulation_id: str, db: Client = Depends(get_db)):
     from fastapi import HTTPException
     result = await reg_service.get_by_id(db, regulation_id)
     if not result:

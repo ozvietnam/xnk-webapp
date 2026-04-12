@@ -55,13 +55,14 @@ class ChatResponse(BaseModel):
 # ── Regulations ──────────────────────────────────────────────
 
 class RegulationResponse(BaseModel):
-    id: int
+    id: str  # UUID
     category: Optional[str] = None
     title: str
     content_vi: Optional[str] = None
     effective_date: Optional[date] = None
     source_document: Optional[str] = None
-    tags: List[str] = []
+    tags: List[Any] = []
+    created_at: Optional[datetime] = None
 
 
 # ── History ──────────────────────────────────────────────────

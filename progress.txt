@@ -129,4 +129,25 @@ Next action: Implement chatbot once API key provided
 
 ---
 
-Next task: T06 — Regulations API (T05 blocked, T06 has no external blockers beyond Supabase)
+Task ID: T06
+Date: 2026-04-12
+Status: COMPLETED
+What was done:
+  - Implemented backend/app/services/regulations.py
+    * list_regulations(): filter by category, order by created_at DESC, limit configurable
+    * get_by_id(): UUID-based lookup with .single()
+  - Fixed RegulationResponse schema: id int → str (UUID), added created_at, tags: List[Any]
+  - Fixed regulations router: regulation_id int → str (UUID path param)
+Testing results:
+  - list_regulations(all): 0 rows (table empty, correct) ✓
+  - list_regulations(thue): 0 rows ✓
+  - get_by_id(fake UUID): None ✓
+  - task.json T06 passes: true
+Notes for future agents:
+  - customs_regulations table currently empty — no seed data for regulations in T03
+  - Categories: 'thu-tuc', 'chung-tu', 'thue', 'kiem-tra'
+  - RLS: public read (is_active=true rows visible without auth)
+
+---
+
+Next task: T07 — Frontend tra-cuu-hs page (depends T04 ✓)
