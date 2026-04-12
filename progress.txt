@@ -88,10 +88,45 @@ Notes for future agents:
 ---
 
 Task ID: T04
-Date: —
-Status: READY (T02 ✓, T03 ✓)
-Next action: Implement GET /api/hs-codes/search and GET /api/hs-codes/{code}
+Date: 2026-04-12
+Status: COMPLETED
+What was done:
+  - Implemented backend/app/services/hs_search.py
+    * search(): calls search_hs_codes() PostgreSQL RPC with configurable threshold
+    * _ilike_fallback(): direct ILIKE on description_vi + code prefix if RPC fails
+    * get_by_code(): exact match via supabase .single()
+  - Updated backend/app/models/schemas.py
+    * HSCodeResponse.id: int → str (UUID)
+    * Added HSCodeSearchResult with similarity_score field
+    * HSSearchResponse.results: List[HSCodeSearchResult]
+  - Updated backend/app/routers/hs_codes.py
+    * Added threshold query param (default 0.15, 0.0-1.0)
+  - Created backend/scripts/test_t04_api.py (standalone integration test)
+Testing results:
+  - 'điện thoại' → 8517.12.00 (score: 0.379) ✓
+  - 'máy tính' → 8471.30.00 (score: 0.375) ✓
+  - 'thép' → 7210.49.11 (score: 0.208) ✓
+  - 'nhựa' → 3923.30.00 (score: 0.185) ✓
+  - '8517' (code prefix) → 8517.12.00 (score: 0.455) ✓
+  - 'laptop' → 8471.30.00 (score: 0.292) ✓
+  - 'smartphone' → 8517.12.00 (score: 0.379) ✓
+  - get_by_code(8517.12.00): ✓ found
+  - get_by_code(8471.30.00): ✓ found
+  - get_by_code(9999.99.99): ✓ correctly returns None
+  - task.json T04 passes: true
+Notes for future agents:
+  - search() uses RPC first, ILIKE fallback on error — transparent to callers
+  - threshold param: lower = broader results, higher = stricter match
+  - supabase .single() throws PGRST116 when 0 rows — catch and return None
+  - Use get_db() (anon key) for reads — no auth needed (public RLS)
 
 ---
 
-Next task: T04 — Backend HS Search API
+Task ID: T05
+Date: —
+Status: BLOCKED — needs CLAUDE_API_KEY
+Next action: Implement chatbot once API key provided
+
+---
+
+Next task: T06 — Regulations API (T05 blocked, T06 has no external blockers beyond Supabase)

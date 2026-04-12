@@ -32,7 +32,7 @@
       "id": "T04",
       "title": "Backend HS Search API",
       "description": "GET /api/hs-codes/search với pg_trgm similarity + ILIKE fallback, GET /api/hs-codes/{code}",
-      "passes": false,
+      "passes": true,
       "dependencies": ["T02", "T03"],
       "needs_external": ["SUPABASE_URL", "SUPABASE_KEY"]
     },

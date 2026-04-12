@@ -18,15 +18,23 @@ class HSCodeBase(BaseModel):
 
 
 class HSCodeResponse(HSCodeBase):
-    id: int
+    id: str  # UUID
     created_at: Optional[datetime] = None
 
     class Config:
         from_attributes = True
 
 
+class HSCodeSearchResult(HSCodeBase):
+    id: str  # UUID
+    similarity_score: Optional[float] = None
+
+    class Config:
+        from_attributes = True
+
+
 class HSSearchResponse(BaseModel):
-    results: List[HSCodeResponse]
+    results: List[HSCodeSearchResult]
     total: int
     query: str
 
