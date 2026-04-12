@@ -24,7 +24,7 @@
       "id": "T03",
       "title": "Seed Data — 50 mã HS XNK phổ biến VN-TQ",
       "description": "Seed 50 mã HS codes phổ biến trong thương mại Việt Nam - Trung Quốc",
-      "passes": false,
+      "passes": true,
       "dependencies": ["T02"],
       "needs_external": ["SUPABASE_URL", "SUPABASE_KEY"]
     },

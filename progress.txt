@@ -61,10 +61,37 @@ Notes for future agents:
 ---
 
 Task ID: T03
-Date: —
-Status: READY (T01 ✓, T02 ✓ — no external blockers beyond what's already configured)
-Next action: Implement T03 seed script — 50 mã HS phổ biến VN-TQ
+Date: 2026-04-12
+Status: COMPLETED
+What was done:
+  - Created backend/scripts/seed_hs_codes.py
+    * 20 chapters seeded across 10 categories (electronics, machinery, steel/aluminum, plastics/rubber, textiles/footwear, wood/furniture, chemicals, vehicles, medical, agriculture)
+    * 50 HS codes seeded with Vietnamese + English descriptions, tax rates (normal/preferential/special)
+    * Uses ON CONFLICT (code) DO UPDATE for idempotent re-runs
+    * Uses service_role key via psycopg2 (bypasses RLS for inserts)
+  - Fixed FLOAT vs REAL type mismatch in search_hs_codes() function (REAL throughout)
+Testing results:
+  - Total hs_codes in DB: ✓ 50
+  - pg_trgm search verified:
+    * 'điện thoại' → 8517.12.00 (score: 0.379) ✓
+    * 'thép' → 7210.49.11 (score: 0.208) ✓
+    * 'nhựa' → 3923.30.00 (score: 0.185) ✓
+    * 'máy tính' → 8471.30.00 (score: 0.375) ✓
+    * 'xe ô tô' → 4011.10.10 (score: 0.242) ✓
+  - task.json T03 passes: true
+Notes for future agents:
+  - Run seed: cd backend && python3 scripts/seed_hs_codes.py
+  - Seed is idempotent (ON CONFLICT DO UPDATE) — safe to re-run
+  - 20 chapters in hs_chapters match all 50 code prefixes
+  - search_hs_codes() threshold default 0.15 works well for Vietnamese queries
 
 ---
 
-Next task: T03 — Seed 50 HS codes
+Task ID: T04
+Date: —
+Status: READY (T02 ✓, T03 ✓)
+Next action: Implement GET /api/hs-codes/search and GET /api/hs-codes/{code}
+
+---
+
+Next task: T04 — Backend HS Search API

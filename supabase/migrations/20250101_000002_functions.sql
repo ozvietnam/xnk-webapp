@@ -27,7 +27,7 @@ CREATE OR REPLACE TRIGGER trigger_user_profiles_updated_at
 CREATE OR REPLACE FUNCTION search_hs_codes(
     search_query    TEXT,
     result_limit    INTEGER DEFAULT 20,
-    sim_threshold   FLOAT   DEFAULT 0.15
+    sim_threshold   REAL    DEFAULT 0.15
 )
 RETURNS TABLE (
     id                      UUID,
@@ -39,7 +39,7 @@ RETURNS TABLE (
     tax_rate_preferential   DECIMAL,
     tax_rate_special        DECIMAL,
     notes                   TEXT,
-    similarity_score        FLOAT
+    similarity_score        REAL
 ) AS $$
 BEGIN
     RETURN QUERY
