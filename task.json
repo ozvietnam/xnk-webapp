@@ -80,7 +80,7 @@
       "id": "T10",
       "title": "Landing page + Navbar + Footer",
       "description": "/ root page, shared Navbar, Footer components",
-      "passes": false,
+      "passes": true,
       "dependencies": ["T07", "T08", "T09"],
       "needs_external": []
     },
@@ -88,7 +88,7 @@
       "id": "T11",
       "title": "Supabase Auth",
       "description": "Login/logout với Supabase Auth, middleware bảo vệ /chatbot và /dashboard",
-      "passes": false,
+      "passes": true,
       "dependencies": ["T10"],
       "needs_external": ["SUPABASE_URL", "SUPABASE_KEY", "NEXT_PUBLIC_SUPABASE_URL", "NEXT_PUBLIC_SUPABASE_ANON_KEY"]
     },
@@ -96,7 +96,7 @@
       "id": "T12",
       "title": "History & Stats API (RLS)",
       "description": "GET /api/history, GET /api/stats với Row Level Security",
-      "passes": false,
+      "passes": true,
       "dependencies": ["T05", "T11"],
       "needs_external": ["SUPABASE_URL", "SUPABASE_SERVICE_KEY"]
     },

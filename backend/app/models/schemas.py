@@ -68,9 +68,9 @@ class RegulationResponse(BaseModel):
 # ── History ──────────────────────────────────────────────────
 
 class SearchHistoryItem(BaseModel):
-    id: int
+    id: str  # UUID
     query: str
-    result_codes: List[str] = []
+    result_codes: List[Any] = []
     created_at: datetime
 
 
