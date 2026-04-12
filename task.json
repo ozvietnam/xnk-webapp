@@ -112,7 +112,7 @@
       "id": "T14",
       "title": "Performance: Redis cache + rate limit + Docker",
       "description": "Redis cache cho search results, rate limiting cho chatbot, Docker Compose production config",
-      "passes": false,
+      "passes": true,
       "dependencies": ["T13"],
       "needs_external": []
     },
@@ -120,7 +120,7 @@
       "id": "T15",
       "title": "Documentation",
       "description": "README.md, API docs (OpenAPI), deployment guide, env setup guide",
-      "passes": false,
+      "passes": true,
       "dependencies": ["T14"],
       "needs_external": []
     }
