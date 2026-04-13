@@ -37,3 +37,14 @@ app.include_router(stats.router, prefix="/api/stats", tags=["Stats"])
 @app.get("/health", tags=["Health"])
 async def health_check():
     return {"status": "ok", "service": "xnk-webapp-api"}
+
+
+@app.get("/api/debug-env", tags=["Health"])
+async def debug_env():
+    """Temporary: verify env vars are loaded (shows only first 20 chars)."""
+    return {
+        "SUPABASE_URL": settings.SUPABASE_URL[:30] if settings.SUPABASE_URL else "EMPTY",
+        "SUPABASE_KEY": settings.SUPABASE_KEY[:20] + "..." if settings.SUPABASE_KEY else "EMPTY",
+        "GEMINI_MODEL": settings.GEMINI_MODEL,
+        "ENVIRONMENT": settings.ENVIRONMENT,
+    }
