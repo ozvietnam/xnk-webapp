@@ -21,5 +21,9 @@ services:
         value: production
       - key: ALLOWED_ORIGINS
         value: https://xnk-webapp.vercel.app,http://localhost:3000
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: GEMINI_MODEL
+        value: gemini-2.5-flash
       - key: OLLAMA_BASE_URL
         value: http://localhost:11434

@@ -9,9 +9,13 @@ class Settings(BaseSettings):
     SUPABASE_KEY: str = ""
     SUPABASE_SERVICE_KEY: str = ""
 
-    # Ollama (local LLM)
+    # Ollama (local LLM, fallback)
     OLLAMA_BASE_URL: str = "http://localhost:11434"
     OLLAMA_MODEL: str = "qwen2.5-coder:32b"
+
+    # Gemini (production LLM, preferred when key is set)
+    GEMINI_API_KEY: str = ""
+    GEMINI_MODEL: str = "gemini-2.5-flash"
 
     # App
     PORT: int = 8000

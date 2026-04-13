@@ -69,8 +69,8 @@ Context từ cơ sở dữ liệu HS codes:
 
 Hãy trả lời câu hỏi dựa trên thông tin trên."""
 
-    # Step 3: Call Ollama OpenAI-compatible endpoint
-    answer = await _call_ollama(user_message)
+    # Step 3: Call LLM (Gemini if key set, else Ollama local)
+    answer = await _call_llm(user_message)
 
     # Step 4: Log search history (non-fatal)
     try:
@@ -93,8 +93,51 @@ Hãy trả lời câu hỏi dựa trên thông tin trên."""
     )
 
 
+async def _call_llm(user_message: str) -> str:
+    """
+    Call LLM — Gemini if API key is set, otherwise Ollama local.
+    Both use OpenAI-compatible /v1/chat/completions format.
+    """
+    if settings.GEMINI_API_KEY:
+        return await _call_gemini(user_message)
+    return await _call_ollama(user_message)
+
+
+async def _call_gemini(user_message: str) -> str:
+    """Call Google Gemini via OpenAI-compatible endpoint."""
+    url = "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions"
+    payload = {
+        "model": settings.GEMINI_MODEL,
+        "messages": [
+            {"role": "system", "content": SYSTEM_PROMPT},
+            {"role": "user", "content": user_message},
+        ],
+        "temperature": 0.3,
+        "max_tokens": 1024,
+    }
+    headers = {
+        "Authorization": f"Bearer {settings.GEMINI_API_KEY}",
+        "Content-Type": "application/json",
+    }
+    try:
+        async with httpx.AsyncClient(timeout=30.0) as client:
+            response = await client.post(url, json=payload, headers=headers)
+            response.raise_for_status()
+            data = response.json()
+            return data["choices"][0]["message"]["content"].strip()
+    except httpx.TimeoutException:
+        logger.error("Gemini request timed out")
+        return "Xin lỗi, hệ thống AI đang bận. Vui lòng thử lại sau."
+    except httpx.HTTPStatusError as e:
+        logger.error(f"Gemini HTTP error: {e.response.status_code} — {e.response.text[:200]}")
+        return "Xin lỗi, không thể kết nối tới Gemini AI. Vui lòng thử lại sau."
+    except Exception as e:
+        logger.error(f"Gemini call failed: {e}")
+        return "Xin lỗi, đã xảy ra lỗi khi xử lý câu hỏi. Vui lòng thử lại."
+
+
 async def _call_ollama(user_message: str) -> str:
-    """Call Ollama via OpenAI-compatible /v1/chat/completions endpoint."""
+    """Call Ollama via OpenAI-compatible /v1/chat/completions endpoint (local fallback)."""
     url = f"{settings.OLLAMA_BASE_URL}/v1/chat/completions"
     payload = {
         "model": settings.OLLAMA_MODEL,
@@ -106,7 +149,6 @@ async def _call_ollama(user_message: str) -> str:
         "max_tokens": 1024,
         "stream": False,
     }
-
     try:
         async with httpx.AsyncClient(timeout=120.0) as client:
             response = await client.post(url, json=payload)
