@@ -10,11 +10,11 @@ async def search(
     db: Client,
     query: str,
     limit: int = 20,
-    threshold: float = 0.15,
+    threshold: float = 0.10,  # lowered from 0.15 — handles queries without diacritics
 ) -> List[HSCodeSearchResult]:
     """
     Search HS codes using the search_hs_codes() PostgreSQL RPC function.
-    Falls back to ILIKE-only search if RPC call fails.
+    Falls back to ILIKE-only search if RPC returns 0 results or fails.
     """
     try:
         response = db.rpc(
@@ -28,11 +28,14 @@ async def search(
 
         if response.data:
             return [HSCodeSearchResult(**row) for row in response.data]
-        return []
+
+        # RPC returned empty — fall through to ILIKE for better coverage
+        logger.info(f"RPC returned 0 results for '{query}', trying ILIKE fallback")
 
     except Exception as e:
         logger.warning(f"RPC search_hs_codes failed ({e}), falling back to ILIKE")
-        return await _ilike_fallback(db, query, limit)
+
+    return await _ilike_fallback(db, query, limit)
 
 
 async def _ilike_fallback(
