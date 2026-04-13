@@ -1,14 +1,18 @@
-import sys
 import traceback
+from fastapi import FastAPI
+from fastapi.responses import PlainTextResponse
 
+# Try to import the real app; fall back to an error app on import failure
+_import_error = None
 try:
     from app.main import app
-except Exception as e:
-    # Expose import error as a minimal ASGI app so Vercel shows the real error
-    tb = traceback.format_exc()
-    async def app(scope, receive, send):
-        if scope["type"] == "http":
-            body = f"Import error: {e}\n\n{tb}".encode()
-            await send({"type": "http.response.start", "status": 500,
-                        "headers": [[b"content-type", b"text/plain"]]})
-            await send({"type": "http.response.body", "body": body})
+except Exception as _e:
+    _import_error = traceback.format_exc()
+    app = FastAPI()
+
+    @app.get("/{path:path}")
+    @app.post("/{path:path}")
+    async def _error_handler(path: str = ""):
+        return PlainTextResponse(
+            f"Import error:\n{_import_error}", status_code=500
+        )
