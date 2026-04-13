@@ -39,34 +39,3 @@ async def health_check():
     return {"status": "ok", "service": "xnk-webapp-api"}
 
 
-@app.get("/api/debug-env", tags=["Health"])
-async def debug_env():
-    """Temporary: verify env vars are loaded."""
-    return {
-        "SUPABASE_URL": settings.SUPABASE_URL[:30] if settings.SUPABASE_URL else "EMPTY",
-        "SUPABASE_KEY_SET": bool(settings.SUPABASE_KEY),
-        "GEMINI_MODEL": settings.GEMINI_MODEL.strip(),
-        "ENVIRONMENT": settings.ENVIRONMENT.strip(),
-    }
-
-
-@app.get("/api/debug-search", tags=["Health"])
-async def debug_search(q: str = "dien thoai"):
-    """Temporary: debug Supabase search on Vercel."""
-    import traceback
-    from app.core.database import get_client
-    db = get_client()
-    result = {"table_query": None, "rpc_query": None, "error": None}
-    try:
-        r = db.table("hs_codes").select("code,description_vi").limit(2).execute()
-        result["table_query"] = [x["code"] for x in (r.data or [])]
-    except Exception as e:
-        result["error"] = f"table: {traceback.format_exc()}"
-    try:
-        r = db.rpc("search_hs_codes", {
-            "search_query": q, "result_limit": 3, "sim_threshold": 0.1
-        }).execute()
-        result["rpc_query"] = [x.get("code") for x in (r.data or [])]
-    except Exception as e:
-        result["error"] = (result.get("error") or "") + f"\nrpc: {traceback.format_exc()}"
-    return result

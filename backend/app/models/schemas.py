@@ -26,7 +26,7 @@ class HSCodeResponse(HSCodeBase):
 
 
 class HSCodeSearchResult(HSCodeBase):
-    id: str  # UUID
+    id: Optional[str] = None  # UUID — present in table queries, absent from RPC results
     similarity_score: Optional[float] = None
 
     class Config:
