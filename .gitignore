@@ -37,5 +37,9 @@ logs/
 # Aider
 .aider*
 
+# API Manager (contains hardcoded API keys — NEVER commit)
+backend/app/core/api_manager.py
+**/usage_tracker.json
+
 backend/venv/
 .claude/worktrees/
