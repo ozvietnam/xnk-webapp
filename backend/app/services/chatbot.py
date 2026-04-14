@@ -294,9 +294,17 @@ async def ask(db: Client, request: ChatRequest, user_id: str | None) -> ChatResp
 
     # --- Agentic loop: think → act → observe → repeat ---
     answer = "Xin lỗi, tôi không thể xử lý câu hỏi này. Vui lòng thử lại."
+    last_content = ""  # Track LLM's thinking text across iterations
 
     for iteration in range(MAX_AGENT_ITERATIONS):
         logger.info(f"Agent iteration {iteration + 1}/{MAX_AGENT_ITERATIONS}")
+
+        # On last iteration, nudge LLM to conclude instead of calling more tools
+        if iteration == MAX_AGENT_ITERATIONS - 1:
+            messages.append({
+                "role": "user",
+                "content": "[HỆ THỐNG] Đây là lượt cuối cùng. Hãy tổng hợp tất cả thông tin đã tra cứu và đưa ra câu trả lời cuối cùng. KHÔNG gọi thêm tool.",
+            })
 
         response_data = await _call_llm_with_tools(messages)
 
@@ -308,6 +316,10 @@ async def ask(db: Client, request: ChatRequest, user_id: str | None) -> ChatResp
         choice = response_data["choices"][0]
         finish_reason = choice.get("finish_reason", "stop")
         assistant_message = choice["message"]
+
+        # Always capture content (LLM may include thinking text alongside tool_calls)
+        if assistant_message.get("content"):
+            last_content = assistant_message["content"].strip()
 
         if finish_reason == "tool_calls" or assistant_message.get("tool_calls"):
             # --- Agent wants to use tools ---
@@ -340,6 +352,11 @@ async def ask(db: Client, request: ChatRequest, user_id: str | None) -> ChatResp
             if content:
                 answer = content.strip()
             break
+    else:
+        # Loop exhausted all iterations without break — use last content if available
+        if last_content and len(last_content) > 20:
+            answer = last_content
+            logger.warning(f"Agent used all {MAX_AGENT_ITERATIONS} iterations, using last content as answer")
 
     # Deduplicate citations preserving order
     seen = set()
