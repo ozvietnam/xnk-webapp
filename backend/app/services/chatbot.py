@@ -32,6 +32,13 @@ Bạn có quyền truy cập các công cụ tra cứu cơ sở dữ liệu. Hã
 - Ngắn gọn, chính xác, chuyên nghiệp.
 - Khi trả lời về thuế suất, phân biệt rõ: thuế MFN (thông thường), thuế ưu đãi ACFTA/RCEP, thuế đặc biệt.
 
+## QUY TẮC MÃ HS 8 SỐ — BẮT BUỘC
+- Mã HS 4-6 số (nhóm/phân nhóm): tương đối ổn định quốc tế, có thể trả lời tự tin.
+- Mã HS 8 số (chi tiết): THAY ĐỔI THƯỜNG XUYÊN theo biểu thuế mới của Việt Nam. Database hiện tại CÓ THỂ CHƯA CẬP NHẬT.
+- Khi trả lời mã 8 số, BẮT BUỘC ghi rõ: "Mã 8 số này tra từ cơ sở dữ liệu tham khảo. Vui lòng đối chiếu biểu thuế XNK mới nhất tại customs.gov.vn hoặc VBPL Hải quan để xác nhận mã chính xác."
+- KHÔNG BAO GIỜ nói mã 8 số là "chính xác" hay "chắc chắn" — luôn dùng từ "tham khảo", "gợi ý phân loại".
+- Ưu tiên trả lời ở mức nhóm 4-6 số (ổn định) + gợi ý hướng phân loại 8 số kèm cảnh báo.
+
 ## Lưu ý quan trọng
 - Câu hỏi về "thuế nhập khẩu từ Trung Quốc" → ưu tiên thuế ACFTA/RCEP (ưu đãi) bên cạnh MFN.
 - Câu hỏi về "thủ tục", "giấy tờ", "chứng từ" → dùng tool search_regulations.
@@ -179,10 +186,16 @@ async def _execute_tool(db: Client, name: str, args: dict) -> tuple[str, list[st
         if not results:
             return "Không tìm thấy mã HS nào phù hợp với từ khóa này.", citations
 
+        has_8digit = False
         lines = []
         for r in results:
             citations.append(r.code)
-            line = f"- Mã {r.code}: {r.description_vi}"
+            code_clean = r.code.replace(".", "")
+            is_8digit = len(code_clean) >= 8
+            if is_8digit:
+                has_8digit = True
+            tag = " [THAM KHẢO - cần đối chiếu biểu thuế mới]" if is_8digit else ""
+            line = f"- Mã {r.code}{tag}: {r.description_vi}"
             if r.description_en:
                 line += f" ({r.description_en})"
             if r.tax_rate_normal is not None:
@@ -196,7 +209,10 @@ async def _execute_tool(db: Client, name: str, args: dict) -> tuple[str, list[st
             if r.notes:
                 line += f" | Ghi chú: {r.notes}"
             lines.append(line)
-        return "\n".join(lines), citations
+        result_text = "\n".join(lines)
+        if has_8digit:
+            result_text += "\n\n⚠️ LƯU Ý: Các mã 8 số trên tra từ CSDL tham khảo, có thể chưa cập nhật biểu thuế mới nhất. Khi trả lời khách, BẮT BUỘC ghi rõ đây là mã tham khảo và hướng dẫn đối chiếu biểu thuế XNK hiện hành."
+        return result_text, citations
 
     elif name == "get_hs_detail":
         code = args.get("code", "")
@@ -205,7 +221,10 @@ async def _execute_tool(db: Client, name: str, args: dict) -> tuple[str, list[st
             return f"Không tìm thấy mã HS '{code}' trong cơ sở dữ liệu.", citations
 
         citations.append(result.code)
-        detail = f"Mã HS: {result.code}\n"
+        code_clean = result.code.replace(".", "")
+        is_8digit = len(code_clean) >= 8
+        ref_tag = " [THAM KHẢO]" if is_8digit else ""
+        detail = f"Mã HS: {result.code}{ref_tag}\n"
         detail += f"Mô tả (VI): {result.description_vi}\n"
         if result.description_en:
             detail += f"Mô tả (EN): {result.description_en}\n"
@@ -219,6 +238,8 @@ async def _execute_tool(db: Client, name: str, args: dict) -> tuple[str, list[st
             detail += f"Đơn vị tính: {result.unit}\n"
         if result.notes:
             detail += f"Ghi chú: {result.notes}\n"
+        if is_8digit:
+            detail += "\n⚠️ Mã 8 số này từ CSDL tham khảo, có thể chưa cập nhật biểu thuế mới nhất. BẮT BUỘC ghi rõ là mã tham khảo khi trả lời khách."
         return detail, citations
 
     elif name == "search_regulations":
