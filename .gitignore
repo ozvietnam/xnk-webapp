@@ -43,3 +43,4 @@ backend/app/core/api_manager.py
 
 backend/venv/
 .claude/worktrees/
+.vercel/
